@@ -4,6 +4,5 @@ namespace SimpleBlog.Domain.Interfaces
 {
     public interface IDatabase
     {
-        DbConnection Connection();
     }
 }

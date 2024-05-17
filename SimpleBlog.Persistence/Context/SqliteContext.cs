@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleBlog.Domain.Entities;
 using SimpleBlog.Domain.Interfaces;
 using System.Data.Common;
 
@@ -11,10 +12,7 @@ namespace SimpleBlog.Persistence.Context
 
         }
 
-        public DbConnection Connection()
-        {
-            return Database.GetDbConnection();
-        }
-        
+        public DbSet<UserEntity> Users { get; set; }
+
     }
 }
