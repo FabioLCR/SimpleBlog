@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Domain.Entities;
@@ -14,15 +15,19 @@ namespace SimpleBlog.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IConfiguration configuration, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task Register(string username, string password)
         {
+            _logger.LogInformation("Registro iniciado para o usuário: {Username}", username);
+
             if (await _userRepository.GetByUsername(username) != null)
                 throw new UserAlreadyExistsException("Usuário já existe");
 
@@ -32,17 +37,23 @@ namespace SimpleBlog.Application.Services
             var user = new UserEntity { Username = username };
             user.SetPassword(password, userSecret);
             await _userRepository.Add(user);
+
+            _logger.LogInformation("Registro concluído para o usuário: {Username}", username);
         }
 
-        public async Task<UserEntity> GetLoggedInUser(ClaimsPrincipal userPrincipal) =>
-            await _userRepository.GetByUsername(userPrincipal.Identity?.Name)
+        public async Task<UserEntity> GetLoggedInUser(ClaimsPrincipal userPrincipal)
+        {
+            _logger.LogInformation("Obtendo usuário logado");
+            return await _userRepository.GetByUsername(userPrincipal.Identity?.Name)
                 ?? throw new UserNotAuthorizedException("Não foi possível obter o usuário logado");
+        }
 
         public async Task<string?> Login(string username, string password)
         {
-            var user = await _userRepository.GetByUsername(username);
-            if (user == null)
-                throw new UserNotFoundException("Usuário não encontrado");
+            _logger.LogInformation("Login iniciado para o usuário: {Username}", username);
+
+            var user = await _userRepository.GetByUsername(username) 
+                ?? throw new UserNotFoundException("Usuário não encontrado");
 
             var userSecret = _configuration["UserSecret"]
                 ?? throw new ConfigurationException("UserSecret não está configurado corretamente");
@@ -50,11 +61,14 @@ namespace SimpleBlog.Application.Services
             if (!user.IsPasswordValid(password, userSecret))
                 throw new InvalidPasswordException("Senha inválida");
 
+            _logger.LogInformation("Login bem-sucedido para o usuário: {Username}", username);
             return GenerateJwtToken(user);
         }
 
         private string GenerateJwtToken(UserEntity user)
         {
+            _logger.LogInformation("Gerando token JWT para o usuário: {Username}", user.Username);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);
             var tokenDescriptor = new SecurityTokenDescriptor

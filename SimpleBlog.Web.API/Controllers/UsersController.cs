@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleBlog.Application.Interfaces;
-using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Exceptions;
 
 namespace SimpleBlog.Web.API.Controllers

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +6,6 @@ using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Interfaces;
 using SimpleBlog.Persistence.Context;
 using SimpleBlog.Persistence.Repositories;
-using SimpleBlog.Persistence.Repositories.SimpleBlog.Persistence.Repositories;
 using System.Text;
 
 namespace SimpleBlog.Web.API

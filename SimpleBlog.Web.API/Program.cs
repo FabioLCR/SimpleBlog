@@ -12,11 +12,17 @@ namespace SimpleBlog
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddLogging(config =>
+            {
+                config.AddDebug();
+                config.AddConsole();
+            });
+
             builder.Services.AddControllers(options =>
             {
-                options.Filters.Add(new CustomExceptionFilter());
+                options.Filters.Add<CustomExceptionFilter>();
             });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -51,12 +57,6 @@ namespace SimpleBlog
                         Array.Empty<string>()
                     }
                 });
-            });
-
-            builder.Services.AddLogging(config =>
-            {
-                config.AddDebug();
-                config.AddConsole();
             });
 
             builder.Services.AddServices(builder.Configuration);

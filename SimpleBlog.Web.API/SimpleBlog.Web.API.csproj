@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Middleware\" />
-    <Folder Include="Filters\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
