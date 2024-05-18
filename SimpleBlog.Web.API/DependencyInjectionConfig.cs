@@ -6,6 +6,8 @@ using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Interfaces;
 using SimpleBlog.Persistence.Context;
 using SimpleBlog.Persistence.Repositories;
+using SimpleBlog.Web.API.Interfaces;
+using SimpleBlog.Web.API.Services;
 using System.Text;
 
 namespace SimpleBlog.Web.API
@@ -13,12 +15,12 @@ namespace SimpleBlog.Web.API
     public static class DependencyInjectionConfig
     {
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddApplicationServices(configuration)
+            services.AddApplicationServices()
                     .AddPersistenceServices(configuration)
-                    .AddAuthenticationServices(configuration);
-                   
+                    .AddAuthenticationServices(configuration)
+                    .AddOtherServices();
 
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration) =>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services) =>
             services.AddTransient<IUserService, UserService>()
                     .AddTransient<IPostService, PostService>();
 
@@ -51,5 +53,9 @@ namespace SimpleBlog.Web.API
             });
             return services;
         }
+
+        public static IServiceCollection AddOtherServices(this IServiceCollection services) => 
+            services.AddSingleton<INotificationService, NotificationService>()
+                    .AddSingleton<IWebSocketManagerService, WebSocketManagerService>();
     }
 }

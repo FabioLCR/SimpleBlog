@@ -3,6 +3,7 @@ using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Domain.Entities;
 using SimpleBlog.Domain.Exceptions;
 using SimpleBlog.Domain.Interfaces;
+using SimpleBlog.Web.API.Interfaces;
 
 namespace SimpleBlog.Application.Services
 {
@@ -10,11 +11,13 @@ namespace SimpleBlog.Application.Services
     {
         private readonly IPostRepository _postRepository;
         private readonly ILogger<PostService> _logger;
+        private readonly INotificationService _notificationService;
 
-        public PostService(IPostRepository postRepository, ILogger<PostService> logger)
+        public PostService(IPostRepository postRepository, ILogger<PostService> logger, INotificationService notificationService)
         {
             _postRepository = postRepository;
             _logger = logger;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<PostEntity>> GetAll()
@@ -41,6 +44,8 @@ namespace SimpleBlog.Application.Services
 
             await _postRepository.Add(post);
             _logger.LogInformation("Postagem adicionada com sucesso");
+
+            await _notificationService.SendNotificationToAll($"Nova postagem criada: {post.Title}");
         }
 
         public async Task Update(PostEntity post, UserEntity loggedInUser)

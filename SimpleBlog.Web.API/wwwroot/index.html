@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Notificações</title>
+</head>
+<body>
+    <h1>Notificações</h1>
+    <div id="notification"></div>
+    <script>
+        var loc = window.location, new_uri;
+        if (loc.protocol === "https:") {
+            new_uri = "wss:";
+        } else {
+            new_uri = "ws:";
+        }
+        new_uri += "//" + loc.host;
+        new_uri += "/ws"; // Ajuste na rota do websocket
+
+        var socket = new WebSocket(new_uri);
+
+        socket.onopen = function (e) {
+            console.log("Conexão estabelecida");
+        };
+
+        socket.onmessage = function (event) {
+            console.log(`Notificação recebida do servidor: ${event.data}`);
+
+            // Adicionar carimbo de data e hora à mensagem
+            var date = new Date();
+            var timestamp = date.toLocaleString();
+            var messageWithTimestamp = timestamp + ": " + event.data;
+
+            // Atualizar a página web com a notificação
+            var notificationElement = document.getElementById("notification");
+            if (notificationElement) {
+                // Adicionar a nova mensagem ao final das mensagens existentes
+                notificationElement.innerHTML += messageWithTimestamp + "<br />";
+            }
+        };
+
+        socket.onerror = function (error) {
+            console.log(`Erro no WebSocket: ${error}`);
+        };
+
+        // Fechar a conexão WebSocket quando a página é fechada
+        window.addEventListener('beforeunload', function (event) {
+            socket.close();
+        });
+    </script>
+</body>
+</html>
