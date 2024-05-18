@@ -32,5 +32,28 @@ namespace SimpleBlog.Web.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            _logger.LogInformation("Logando usuário {Username}", username);
+            try
+            {
+                var token = await _userService.Login(username, password);
+                if (token == null)
+                {
+                    _logger.LogInformation("Falha ao logar usuário {Username}", username);
+                    return Unauthorized();
+                }
+
+                _logger.LogInformation("Usuário {Username} logado com sucesso", username);
+                return Ok(new { token });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao logar usuário {Username}", username);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using SimpleBlog.Persistence.Context;
 
-namespace SimpleBlog.Persistence.Context
+namespace SimpleBlog.Persistence.Configurations
 {
     public class SqliteContextFactory : IDesignTimeDbContextFactory<SqliteContext>
     {

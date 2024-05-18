@@ -1,5 +1,8 @@
 
+using Microsoft.OpenApi.Models;
 using SimpleBlog.Web.API;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Reflection;
 
 namespace SimpleBlog
 {
@@ -12,7 +15,40 @@ namespace SimpleBlog
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Simple Blog", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Por favor, insira no campo a palavra 'Bearer' seguida de um [espaço] e o 'token' disponibilizado no login.",
+                    Name = "Authorization",
+                    BearerFormat = "JWT",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "Bearer",
+                            Name = "Bearer",
+                            BearerFormat = "JWT",
+                            Type = SecuritySchemeType.ApiKey,
+                            In = ParameterLocation.Header,
+                        },
+                        new string[] {}
+                    }
+                });
+            });
 
             builder.Services.AddLogging(config =>
             {
@@ -24,14 +60,21 @@ namespace SimpleBlog
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    c.RoutePrefix = "swagger";
+                    c.DocumentTitle = "Simple Blog";
+                    c.DocExpansion(DocExpansion.None);
+                });
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

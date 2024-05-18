@@ -32,5 +32,7 @@ namespace SimpleBlog.Domain.Entities
             var pbkdf2 = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(key), 10000);
             return Password == Convert.ToBase64String(pbkdf2.GetBytes(20));
         }
+
+
     }
 }

@@ -13,6 +13,7 @@ namespace SimpleBlog.Persistence.Context
         }
 
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<PostEntity> Posts { get; set; }
 
     }
 }
