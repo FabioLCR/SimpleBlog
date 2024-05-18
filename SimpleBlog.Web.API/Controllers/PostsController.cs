@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Entities;
+using SimpleBlog.Domain.Exceptions;
 
 namespace SimpleBlog.Web.API.Controllers
 {
@@ -9,12 +11,10 @@ namespace SimpleBlog.Web.API.Controllers
     [Route("[controller]")]
     public class PostsController : Controller
     {
-        private readonly UserService _userService;
-        private readonly PostService _postService;
+        private readonly IUserService _userService;
+        private readonly IPostService _postService;
 
-        public PostsController(
-            UserService userService,  
-            PostService postService)
+        public PostsController(IUserService userService, IPostService postService)
         {
             _userService = userService;
             _postService = postService;
@@ -22,77 +22,43 @@ namespace SimpleBlog.Web.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IEnumerable<PostEntity>> GetAll()
         {
-            var posts = await _postService.GetAll();
-            return Ok(posts);
+            return await _postService.GetAll();
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<PostEntity?> GetById(int id)
         {
-            var post = await _postService.GetById(id);
-            if (post == null)
-                return NotFound();
-
-            return Ok(post);
+            return await _postService.GetById(id);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(PostEntity post)
+        public async Task Create(PostEntity post)
         {
             var user = await _userService.GetLoggedInUser(User);
-            if (user == null)
-                return Unauthorized();
-
-            post.UserId = user.Id;
-            await _postService.Add(post);
-
-            return Ok(post);
+            await _postService.Add(post, user);
         }
-
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, PostEntity post)
+        public async Task Update(int id, PostEntity post)
         {
-            var user = await _userService.GetLoggedInUser(User); 
-            if (user == null)
-                return Unauthorized();
+            if (id != post.Id)
+                throw new ArgumentException("ID na URL não corresponde ao ID do post");
 
-            var existingPost = await _postService.GetById(id);
-            if (existingPost == null)
-                return NotFound();
-
-            if (existingPost.UserId != user.Id)
-                return Forbid();
-
-            post.UserId = user.Id;
-            await _postService.Update(post);
-
-            return Ok(post);
+            var user = await _userService.GetLoggedInUser(User);
+            await _postService.Update(post, user);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task Delete(int id)
         {
             var user = await _userService.GetLoggedInUser(User);
-            if (user == null)
-                return Unauthorized();
-
-            var existingPost = await _postService.GetById(id);
-            if (existingPost == null)
-                return NotFound();
-
-            if (existingPost.UserId != user.Id)
-                return Forbid();
-
-            await _postService.Delete(id);
-
-            return NoContent();
+            await _postService.Delete(id, user);
         }
     }
 }

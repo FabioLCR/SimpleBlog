@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Interfaces;
 using SimpleBlog.Persistence.Context;
@@ -20,8 +21,8 @@ namespace SimpleBlog.Web.API
                    
 
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddTransient<UserService>()
-                    .AddTransient<PostService>();
+            services.AddTransient<IUserService, UserService>()
+                    .AddTransient<IPostService, PostService>();
 
 
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) =>

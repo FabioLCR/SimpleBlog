@@ -1,8 +1,8 @@
 
 using Microsoft.OpenApi.Models;
 using SimpleBlog.Web.API;
+using SimpleBlog.Web.API.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Reflection;
 
 namespace SimpleBlog
 {
@@ -13,7 +13,10 @@ namespace SimpleBlog
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add(new CustomExceptionFilter());
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -45,7 +48,7 @@ namespace SimpleBlog
                             Type = SecuritySchemeType.ApiKey,
                             In = ParameterLocation.Header,
                         },
-                        new string[] {}
+                        Array.Empty<string>()
                     }
                 });
             });

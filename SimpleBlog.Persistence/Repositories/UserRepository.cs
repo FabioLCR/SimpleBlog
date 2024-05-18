@@ -18,7 +18,7 @@ namespace SimpleBlog.Persistence.Repositories
                 _context = (SqliteContext)database;
             }
 
-            public async Task<UserEntity?> GetByUsername(string username) => 
+            public async Task<UserEntity?> GetByUsername(string? username) => 
                 await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
 
             public async Task Add(UserEntity user)

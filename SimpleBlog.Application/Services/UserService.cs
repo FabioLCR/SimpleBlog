@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Domain.Entities;
+using SimpleBlog.Domain.Exceptions;
 using SimpleBlog.Domain.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,7 +10,7 @@ using System.Text;
 
 namespace SimpleBlog.Application.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
@@ -22,38 +24,34 @@ namespace SimpleBlog.Application.Services
         public async Task Register(string username, string password)
         {
             if (await _userRepository.GetByUsername(username) != null)
-                throw new Exception("Usuario já existe");
+                throw new UserAlreadyExistsException("Usuário já existe");
 
             var userSecret = _configuration["UserSecret"]
-                ?? throw new Exception("UserSecret não está configurado corretamente");
+                ?? throw new ConfigurationException("UserSecret não está configurado corretamente");
 
             var user = new UserEntity { Username = username };
             user.SetPassword(password, userSecret);
             await _userRepository.Add(user);
         }
 
+        public async Task<UserEntity> GetLoggedInUser(ClaimsPrincipal userPrincipal) =>
+            await _userRepository.GetByUsername(userPrincipal.Identity?.Name)
+                ?? throw new UserNotAuthorizedException("Não foi possível obter o usuário logado");
+
         public async Task<string?> Login(string username, string password)
         {
             var user = await _userRepository.GetByUsername(username);
             if (user == null)
-                return null;
+                throw new UserNotFoundException("Usuário não encontrado");
 
             var userSecret = _configuration["UserSecret"]
-                ?? throw new Exception("UserSecret não está configurado corretamente");
+                ?? throw new ConfigurationException("UserSecret não está configurado corretamente");
 
             if (!user.IsPasswordValid(password, userSecret))
-                return null;
+                throw new InvalidPasswordException("Senha inválida");
 
             return GenerateJwtToken(user);
         }
-
-        public async Task<UserEntity?> GetLoggedInUser(ClaimsPrincipal userPrincipal)
-        {
-            //Obtem o usuario logado
-            var username = userPrincipal.Identity?.Name;
-            return username != null ? await _userRepository.GetByUsername(username) : null;
-        }
-
 
         private string GenerateJwtToken(UserEntity user)
         {

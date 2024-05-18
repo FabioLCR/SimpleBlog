@@ -7,5 +7,7 @@ namespace SimpleBlog.Domain.Entities
         public string Content { get; set; }
         public int UserId { get; set; }
         public UserEntity User { get; set; }
+
+        public bool CanEdit(UserEntity user) => UserId == user.Id;
     }
 }
