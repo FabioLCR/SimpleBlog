@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBlog.Application.Interfaces;
+using SimpleBlog.Application.Mappers;
 using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Entities;
 using SimpleBlog.Domain.Exceptions;
+using SimpleBlog.Web.API.ViewModels;
 
 namespace SimpleBlog.Web.API.Controllers
 {
@@ -20,37 +22,40 @@ namespace SimpleBlog.Web.API.Controllers
             _postService = postService;
         }
 
-        [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<PostEntity>> GetAll()
+        public async Task<IEnumerable<PostResponse>> GetAll()
         {
-            return await _postService.GetAll();
+            var posts = await _postService.GetAll();
+
+            return posts.ToResponse();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
-        public async Task<PostEntity?> GetById(int id)
+        public async Task<PostResponse?> GetById(int id)
         {
-            return await _postService.GetById(id);
+            var post = await _postService.GetById(id);
+
+            return post?.ToResponse();
         }
 
         [Authorize]
         [HttpPost]
-        public async Task Create(PostEntity post)
+        public async Task Create(PostCreateRequest request)
         {
             var user = await _userService.GetLoggedInUser(User);
-            await _postService.Add(post, user);
+
+            await _postService.Add(request.ToDTO(user));
         }
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task Update(int id, PostEntity post)
+        public async Task Update(int id, PostUpdateRequest post)
         {
             if (id != post.Id)
                 throw new ArgumentException("ID na URL não corresponde ao ID do post");
 
             var user = await _userService.GetLoggedInUser(User);
-            await _postService.Update(post, user);
+            await _postService.Update(post.ToDTO(user));
         }
 
         [Authorize]

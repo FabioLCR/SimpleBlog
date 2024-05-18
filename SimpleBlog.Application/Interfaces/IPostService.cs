@@ -4,10 +4,10 @@ namespace SimpleBlog.Application.Interfaces
 {
     public interface IPostService
     {
-        Task Add(PostEntity post, UserEntity loggedInUser);
-        Task Delete(int id, UserEntity loggedInUser);
-        Task<IEnumerable<PostEntity>> GetAll();
-        Task<PostEntity?> GetById(int id);
-        Task Update(PostEntity post, UserEntity loggedInUser);
+        Task<IEnumerable<PostDTO>> GetAll();
+        Task<PostDTO?> GetById(int id);
+        Task Add(PostDTO post);
+        Task Update(PostDTO post);
+        Task Delete(int id, UserDTO loggedInUser);
     }
 }

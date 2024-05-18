@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SimpleBlog.Application.Interfaces;
+using SimpleBlog.Application.Mappers;
 using SimpleBlog.Domain.Entities;
 using SimpleBlog.Domain.Exceptions;
 using SimpleBlog.Domain.Interfaces;
@@ -17,7 +18,10 @@ namespace SimpleBlog.Application.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration, ILogger<UserService> logger)
+        public UserService(
+            IUserRepository userRepository, 
+            IConfiguration configuration, 
+            ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _configuration = configuration;
@@ -41,11 +45,15 @@ namespace SimpleBlog.Application.Services
             _logger.LogInformation("Registro concluído para o usuário: {Username}", username);
         }
 
-        public async Task<UserEntity> GetLoggedInUser(ClaimsPrincipal userPrincipal)
+        public async Task<UserDTO> GetLoggedInUser(ClaimsPrincipal userPrincipal)
         {
             _logger.LogInformation("Obtendo usuário logado");
-            return await _userRepository.GetByUsername(userPrincipal.Identity?.Name)
-                ?? throw new UserNotAuthorizedException("Não foi possível obter o usuário logado");
+
+            var loggedInUser = await _userRepository.GetByUsername(userPrincipal.Identity?.Name) 
+                ?? throw new UserNotAuthorizedException("Usuário não autorizado");
+
+            _logger.LogInformation("Usuário logado obtido: {Username}", loggedInUser.Username);
+            return loggedInUser.ToDTO();
         }
 
         public async Task<string?> Login(string username, string password)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Domain.Exceptions;
+using SimpleBlog.Web.API.ViewModels;
 
 namespace SimpleBlog.Web.API.Controllers
 {
@@ -16,18 +17,18 @@ namespace SimpleBlog.Web.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string username, string password)
+        public async Task<IActionResult> Register(UserRegisterRequest request)
         {
-            await _userService.Register(username, password);
+            await _userService.Register(request.Username, request.Password);
             return Ok();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(UserLoginRequest request)
         {
             try
             {
-                var token = await _userService.Login(username, password);
+                var token = await _userService.Login(request.Username, request.Password);
                 return Ok(new { token });
             }
             catch (UserNotFoundException) { return Unauthorized("Credenciais inválidas"); }

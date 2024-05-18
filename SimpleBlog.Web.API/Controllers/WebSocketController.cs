@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SimpleBlog.Application.DTOs;
 using SimpleBlog.Web.API.Interfaces;
 using System.Net.WebSockets;
 
@@ -26,9 +27,12 @@ namespace SimpleBlog.Web.API.Controllers
                 WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 string socketId = _webSocketConnectionManager.AddSocket(webSocket);
 
-                await _notificationService.SendNotification(webSocket, "Conexão estabelecida");
-
-                // Agora você pode usar o socketId para referenciar este socket em particular
+                await _notificationService.SendNotification(webSocket, new NotificationDTO
+                {
+                    Timestamp = DateTime.UtcNow,
+                    PostTitle = "Bem-vindo!",
+                    PostContent = "Você está conectado ao WebSocket"
+                });
 
                 // Aguarde o cliente fechar a conexão WebSocket
                 WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), CancellationToken.None);

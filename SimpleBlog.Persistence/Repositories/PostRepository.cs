@@ -20,13 +20,13 @@ namespace SimpleBlog.Persistence.Repositories
         public async Task<IEnumerable<PostEntity>> GetAll()
         {
             _logger.LogInformation("Obtendo todas as postagens");
-            return await _context.Posts.ToListAsync();
+            return await _context.Posts.Include(p => p.User).ToListAsync();
         }
 
         public async Task<PostEntity?> GetById(int id)
         {
             _logger.LogInformation("Obtendo postagem pelo ID: {Id}", id);
-            return await _context.Posts.FindAsync(id);
+            return await _context.Posts.Include(p => p.User).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task Add(PostEntity post)

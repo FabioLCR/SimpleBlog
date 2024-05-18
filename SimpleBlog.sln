@@ -5,11 +5,11 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBlog.Web.API", "SimpleBlog.Web.API\SimpleBlog.Web.API.csproj", "{88B3A0E0-4B9C-444A-BE64-477F2EF3055E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBlog.Domain", "SimpleBlog.Domain\SimpleBlog.Domain.csproj", "{F35422DF-AD96-42C1-BF0E-F79AC653B111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBlog.Domain", "SimpleBlog.Domain\SimpleBlog.Domain.csproj", "{F35422DF-AD96-42C1-BF0E-F79AC653B111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBlog.Persistence", "SimpleBlog.Persistence\SimpleBlog.Persistence.csproj", "{E36A70AE-2A74-42F3-8ACC-3983FF46D439}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBlog.Persistence", "SimpleBlog.Persistence\SimpleBlog.Persistence.csproj", "{E36A70AE-2A74-42F3-8ACC-3983FF46D439}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBlog.Application", "SimpleBlog.Application\SimpleBlog.Application.csproj", "{BEC7433D-5DEA-430A-A77B-730D026D2FC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBlog.Application", "SimpleBlog.Application\SimpleBlog.Application.csproj", "{BEC7433D-5DEA-430A-A77B-730D026D2FC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

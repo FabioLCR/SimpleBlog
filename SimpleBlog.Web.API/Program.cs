@@ -1,11 +1,7 @@
-
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using SimpleBlog.Web.API;
-using SimpleBlog.Web.API.Extensions;
 using SimpleBlog.Web.API.Filters;
-using SimpleBlog.Web.API.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SimpleBlog
@@ -80,7 +76,6 @@ namespace SimpleBlog
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseWebSocketManager(builder.Configuration, app.Services.GetRequiredService<IWebSocketHandler>());
             app.UseWebSockets();
 
             app.UseStaticFiles(new StaticFileOptions

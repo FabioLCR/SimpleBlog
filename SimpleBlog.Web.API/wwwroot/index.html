@@ -2,11 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Notificações</title>
+    <title>Simple Blog</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <h1>Notificações</h1>
-    <div id="notification"></div>
+    <h1>Simple Blog</h1>
+    <h2>Notificações</h2>
+    <div id="notifications"></div>
+
     <script>
         var loc = window.location, new_uri;
         if (loc.protocol === "https:") {
@@ -24,19 +27,14 @@
         };
 
         socket.onmessage = function (event) {
-            console.log(`Notificação recebida do servidor: ${event.data}`);
-
-            // Adicionar carimbo de data e hora à mensagem
-            var date = new Date();
-            var timestamp = date.toLocaleString();
-            var messageWithTimestamp = timestamp + ": " + event.data;
-
-            // Atualizar a página web com a notificação
-            var notificationElement = document.getElementById("notification");
-            if (notificationElement) {
-                // Adicionar a nova mensagem ao final das mensagens existentes
-                notificationElement.innerHTML += messageWithTimestamp + "<br />";
-            }
+            var notification = JSON.parse(event.data);
+            var div = document.createElement('div');
+            div.className = 'notification';
+            div.innerHTML = (notification.Username ? '<h2>' + notification.Username + '</h2>' : '') +
+                '<p><strong>' + notification.PostTitle + '</strong></p>' +
+                '<p>' + notification.PostContent + '</p>' +
+                '<time>' + new Date(notification.Timestamp).toLocaleString() + '</time>';
+            document.getElementById('notifications').appendChild(div);
         };
 
         socket.onerror = function (error) {
