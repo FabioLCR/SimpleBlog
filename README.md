@@ -1,6 +1,6 @@
 ﻿# SimpleBlog
 
-[Sobre](#sobre-o-projeto) | [Requisitos](#requisitos-do-projeto) | [Arquitetura](#arquitetura) | [Estrutura](#estrutura-do-projeto) | [Testes](##testes) | [WebSockets](#websockets) | [Swagger](#swagger) | [Pagina Estatica](#pagina-estatica) | [Autenticacao](#autenticacao) | [Configuracao](#configuracao) | [Como usar](#como-usar) | [Endpoints](#endpoints)
+[Sobre](#sobre-o-projeto) | [Requisitos](#requisitos-do-projeto) | [Arquitetura](#arquitetura) | [Estrutura](#estrutura-do-projeto) | [Testes](#testes) | [WebSockets](#websockets) | [Swagger](#swagger) | [Página Estática](#página-estática) | [Autenticação](#autenticação) | [Configuração](#configuração) | [Como usar](#como-usar) | [Endpoints](#endpoints)
 
 
 ## Sobre o Projeto
@@ -26,7 +26,7 @@ O projeto foi construído com os seguintes requisitos em mente:
 
 A arquitetura Hexagonal, também conhecida como Ports and Adapters, permite que a lógica de negócios seja isolada e testada independentemente de coisas como banco de dados e UI. Isso é feito através da definição de contratos claros e separação de responsabilidades.
 
-![Arquitetura](./contents/ArquiteturaH.png)
+![Arquitetura](./Contents/ArquiteturaH.png)
 
 
 ### Domain-Driven Design
@@ -162,7 +162,7 @@ socket.onclose = function(event) {
 
 O projeto utiliza o Swagger para documentação da API. Você pode acessar a documentação da API visitando `/swagger/index.html` no seu navegador.
 
-<Colocar imagem aqui mostrando a interface do Swagger>
+![Arquitetura](./Contents/Swagger.png)
 
 <sup>[Voltar para o inicio](#simpleblog)</sup>
 
@@ -170,7 +170,7 @@ O projeto utiliza o Swagger para documentação da API. Você pode acessar a doc
 
 O projeto também fornece uma página estática que pode ser usada para testar a conexão WebSocket. Você pode acessar esta página visitando `/websocket/index.html` no seu navegador.
 
-<img src="./contents/SimbleBlogNotification.gif">
+![Arquitetura](./Contents/SimbleBlogNotification.gif)
 
 <sup>[Voltar para o inicio](#simpleblog)</sup>
 
