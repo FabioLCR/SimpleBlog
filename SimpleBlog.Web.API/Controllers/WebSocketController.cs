@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleBlog.Application.DTOs;
+using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Web.API.Interfaces;
 using System.Net.WebSockets;
 
@@ -10,13 +11,16 @@ namespace SimpleBlog.Web.API.Controllers
     {
         private readonly INotificationService _notificationService;
         private readonly IWebSocketManagerService _webSocketConnectionManager;
+        private readonly IWebSocketHandlerFactory _webSocketHandlerFactory;
 
         public WebSocketController(
             INotificationService notificationService,
-            IWebSocketManagerService webSocketConnectionManager)
+            IWebSocketManagerService webSocketConnectionManager,
+            IWebSocketHandlerFactory webSocketHandlerFactory)
         {
             _notificationService = notificationService;
             _webSocketConnectionManager = webSocketConnectionManager;
+            _webSocketHandlerFactory = webSocketHandlerFactory;
         }
 
         [HttpGet("/ws")]
@@ -24,24 +28,23 @@ namespace SimpleBlog.Web.API.Controllers
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
-                WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                string socketId = _webSocketConnectionManager.AddSocket(webSocket);
+                IWebSocketHandler webSocketHandler = _webSocketHandlerFactory.Create(HttpContext);
+                string socketId = _webSocketConnectionManager.AddSocket(webSocketHandler);
 
-                await _notificationService.SendNotification(webSocket, new NotificationDTO
+                await _notificationService.SendNotification(socketId, new NotificationDTO
                 {
                     Timestamp = DateTime.UtcNow,
                     PostTitle = "Bem-vindo!",
                     PostContent = "Você está conectado ao WebSocket"
                 });
 
-                // Aguarde o cliente fechar a conexão WebSocket
-                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), CancellationToken.None);
-                while (!result.CloseStatus.HasValue)
+                WebSocketReceiveResult result = await webSocketHandler.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), CancellationToken.None);
+
+                while (result != null && !result.CloseStatus.HasValue)
                 {
-                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), CancellationToken.None);
+                    result = await webSocketHandler.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), CancellationToken.None);
                 }
 
-                // Quando a conexão WebSocket é fechada, remova o socket do WebSocketConnectionManager
                 await _webSocketConnectionManager.RemoveSocket(socketId);
             }
             else

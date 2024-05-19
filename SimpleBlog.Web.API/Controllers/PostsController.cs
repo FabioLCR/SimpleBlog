@@ -2,9 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Application.Mappers;
-using SimpleBlog.Application.Services;
-using SimpleBlog.Domain.Entities;
-using SimpleBlog.Domain.Exceptions;
 using SimpleBlog.Web.API.ViewModels;
 
 namespace SimpleBlog.Web.API.Controllers

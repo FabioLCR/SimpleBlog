@@ -4,8 +4,9 @@ namespace SimpleBlog.Web.API.Interfaces
 {
     public interface IWebSocketManagerService
     {
-        IEnumerable<KeyValuePair<string, WebSocket>> GetSockets();
-        string AddSocket(WebSocket socket);
+        IWebSocketHandler? GetSocketById(string id);
+        IEnumerable<KeyValuePair<string, IWebSocketHandler>> GetSockets();
+        string AddSocket(IWebSocketHandler socket);
         Task RemoveSocket(string id);
     }
 }

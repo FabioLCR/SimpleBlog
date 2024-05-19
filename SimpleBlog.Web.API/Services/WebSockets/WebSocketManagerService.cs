@@ -2,11 +2,11 @@ using SimpleBlog.Web.API.Interfaces;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 
-namespace SimpleBlog.Web.API.Services
+namespace SimpleBlog.Web.API.Services.WebSockets
 {
     public class WebSocketManagerService : IWebSocketManagerService
     {
-        private readonly ConcurrentDictionary<string, WebSocket> _sockets = new();
+        private readonly ConcurrentDictionary<string, IWebSocketHandler> _sockets = new();
         private readonly ILogger<WebSocketManagerService> _logger;
 
         public WebSocketManagerService(ILogger<WebSocketManagerService> logger)
@@ -14,9 +14,15 @@ namespace SimpleBlog.Web.API.Services
             _logger = logger;
         }
 
-        public IEnumerable<KeyValuePair<string, WebSocket>> GetSockets() => _sockets;
+        public IWebSocketHandler? GetSocketById(string id)
+        {
+            _sockets.TryGetValue(id, out var socket);
+            return socket;
+        }
 
-        public string AddSocket(WebSocket socket)
+        public IEnumerable<KeyValuePair<string, IWebSocketHandler>> GetSockets() => _sockets;
+
+        public string AddSocket(IWebSocketHandler socket)
         {
             string id = Guid.NewGuid().ToString();
             _sockets.TryAdd(id, socket);

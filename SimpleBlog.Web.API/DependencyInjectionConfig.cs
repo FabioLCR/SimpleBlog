@@ -5,9 +5,11 @@ using SimpleBlog.Application.Interfaces;
 using SimpleBlog.Application.Services;
 using SimpleBlog.Domain.Interfaces;
 using SimpleBlog.Persistence.Context;
+using SimpleBlog.Persistence.Interfaces;
 using SimpleBlog.Persistence.Repositories;
 using SimpleBlog.Web.API.Interfaces;
 using SimpleBlog.Web.API.Services;
+using SimpleBlog.Web.API.Services.WebSockets;
 using System.Text;
 
 namespace SimpleBlog.Web.API
@@ -26,7 +28,7 @@ namespace SimpleBlog.Web.API
 
 
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddDbContext<IDatabase, SqliteContext>(options =>
+            services.AddDbContext<ISqliteContext, SqliteContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")))
                     .AddTransient<IUserRepository, UserRepository>()
                     .AddTransient<IPostRepository, PostRepository>();

@@ -13,7 +13,7 @@ namespace SimpleBlog.Application.Mappers
             Id = entity.Id,
             Title = entity.Title,
             Content = entity.Content,
-            User = entity.User.ToDTO()
+            User = entity.User?.ToDTO()
         };
 
         public static IEnumerable<PostEntity> ToEntity(this IEnumerable<PostDTO> dto) => 
@@ -24,7 +24,7 @@ namespace SimpleBlog.Application.Mappers
             Id = dto.Id,
             Title = dto.Title,
             Content = dto.Content,
-            UserId = dto.User.Id
+            UserId = dto?.User?.Id
         };
 
         public static NotificationDTO ToNotificationDTO(this PostDTO dto) => new()
@@ -32,7 +32,7 @@ namespace SimpleBlog.Application.Mappers
             Timestamp = DateTime.Now,
             PostTitle = dto.Title,
             PostContent = dto.Content,
-            Username = dto.User.Username!
+            Username = dto?.User?.Username!
         };
             
     }

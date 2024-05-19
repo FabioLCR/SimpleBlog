@@ -58,10 +58,10 @@ namespace SimpleBlog.Application.Services
 
         public async Task<string?> Login(string username, string password)
         {
-            _logger.LogInformation("Login iniciado para o usuário: {Username}", username);
-
             var user = await _userRepository.GetByUsername(username) 
                 ?? throw new UserNotFoundException("Usuário não encontrado");
+
+            _logger.LogInformation("Login iniciado para o usuário: {Username}", username);
 
             var userSecret = _configuration["UserSecret"]
                 ?? throw new ConfigurationException("UserSecret não está configurado corretamente");
@@ -76,6 +76,9 @@ namespace SimpleBlog.Application.Services
         private string GenerateJwtToken(UserEntity user)
         {
             _logger.LogInformation("Gerando token JWT para o usuário: {Username}", user.Username);
+
+            if (_configuration["Jwt:Key"] == null)
+                throw new ConfigurationException("Chave JWT não está configurada corretamente");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);

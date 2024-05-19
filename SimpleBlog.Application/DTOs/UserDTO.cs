@@ -1,8 +1,8 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace SimpleBlog.Domain.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class UserDTO
     {
         public int Id { get; set; }

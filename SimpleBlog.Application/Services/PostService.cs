@@ -4,7 +4,6 @@ using SimpleBlog.Application.Mappers;
 using SimpleBlog.Domain.Entities;
 using SimpleBlog.Domain.Exceptions;
 using SimpleBlog.Domain.Interfaces;
-using SimpleBlog.Web.API.Interfaces;
 
 namespace SimpleBlog.Application.Services
 {
@@ -42,10 +41,10 @@ namespace SimpleBlog.Application.Services
 
         public async Task Add(PostDTO post)
         {
-            _logger.LogInformation("Adicionando nova postagem pelo usuário: {Username}", post.User.Username);
-
             if (post.User == null)
                 throw new UserNotAuthorizedException("Usuário não autorizado");
+
+            _logger.LogInformation("Adicionando nova postagem pelo usuário: {Username}", post.User.Username);
 
             if (await _postRepository.GetById(post.Id) != null)
                 throw new PostConflictException("Já existe uma postagem com o ID informado");
@@ -58,10 +57,10 @@ namespace SimpleBlog.Application.Services
 
         public async Task Update(PostDTO post)
         {
-            _logger.LogInformation("Atualizando postagem pelo usuário: {Username}", post.User.Username);
-
             if (post.User == null)
                 throw new UserNotAuthorizedException("Usuário não autorizado");
+
+            _logger.LogInformation("Atualizando postagem pelo usuário: {Username}", post.User.Username);
 
             var existingPost = await _postRepository.GetById(post.User.Id)
                 ?? throw new PostNotFoundException("Postagem não encontrada");
@@ -75,10 +74,10 @@ namespace SimpleBlog.Application.Services
 
         public async Task Delete(int id, UserDTO loggedInUser)
         {
-            _logger.LogInformation("Excluindo postagem pelo usuário: {Username}", loggedInUser.Username);
-
             if (loggedInUser == null)
                 throw new UserNotAuthorizedException("Usuário não autorizado");
+
+            _logger.LogInformation("Excluindo postagem pelo usuário: {Username}", loggedInUser.Username);
 
             var existingPost = await _postRepository.GetById(loggedInUser.Id)
                 ?? throw new PostNotFoundException("Postagem não encontrada");

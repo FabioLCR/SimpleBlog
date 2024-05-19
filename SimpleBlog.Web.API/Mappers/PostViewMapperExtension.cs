@@ -27,9 +27,9 @@ namespace SimpleBlog.Application.Mappers
         public static PostResponse ToResponse(this PostDTO dto) => new()
         {
             Id = dto.Id,
-            Title = dto.Title,
-            Content = dto.Content,
-            UserId = dto.User.Id
+            Title = dto?.Title,
+            Content = dto?.Content,
+            UserId = dto?.User?.Id
         };
     }
 }
