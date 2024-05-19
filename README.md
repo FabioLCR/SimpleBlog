@@ -7,7 +7,7 @@
 
 O SimpleBlog é um projeto de blog simples que utiliza a arquitetura Hexagonal (Ports and Adapters), Domain-Driven Design (DDD), os princípios SOLID e Clean Code.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Requisitos do Projeto
 
@@ -18,7 +18,7 @@ O projeto foi construído com os seguintes requisitos em mente:
 - **Visualização de Postagens**: Qualquer visitante do site pode visualizar as postagens existentes.
 - **Notificações em Tempo Real**: Implemente um sistema de notificação em tempo real usando WebSockets para informar os usuários sobre novas postagens assim que são publicadas.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Arquitetura
 
@@ -41,7 +41,7 @@ Os princípios SOLID são um conjunto de princípios de design orientado a objet
 
 Clean Code é uma disciplina de desenvolvimento que se concentra em manter o código simples, legível e fácil de manter.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Estrutura do Projeto
 
@@ -93,7 +93,7 @@ A camada de persistência é responsável por interagir com o banco de dados. El
 
 Esta é a camada de apresentação, que contém a API web. Ela contém controllers para lidar com solicitações HTTP, filtros para lidar com aspectos transversais como tratamento de erros, interfaces para serviços, mapeadores para converter entre DTOs e ViewModels, serviços para lógica específica da API, e ViewModels para dados enviados para o cliente. Esta camada também implementa a funcionalidade WebSocket para comunicação em tempo real.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Testes
 
@@ -132,7 +132,7 @@ public void TestMethod()
 }
 ```
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## WebSockets
 
@@ -156,7 +156,7 @@ socket.onclose = function(event) {
 };
 ```
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Swagger
 
@@ -164,16 +164,15 @@ O projeto utiliza o Swagger para documentação da API. Você pode acessar a doc
 
 <Colocar imagem aqui mostrando a interface do Swagger>
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Página Estática
 
 O projeto também fornece uma página estática que pode ser usada para testar a conexão WebSocket. Você pode acessar esta página visitando `/websocket/index.html` no seu navegador.
 
-![Arquitetura](./contents/SimbleBlogNotification.gif)
+<img src="./contents/SimbleBlogNotification.gif">
 
-
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Autenticação
 
@@ -210,7 +209,7 @@ Se o login for bem-sucedido, o servidor retornará um token JWT.
 
 Após o registro bem-sucedido ou login, o servidor retornará um token JWT. Este token deve ser incluído no cabeçalho `Authorization` de todas as solicitações subsequentes que requerem autenticação. O cabeçalho deve ter o seguinte formato: `Authorization: Bearer <token>`.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Configuração
 
@@ -237,13 +236,13 @@ O caminho para o WebSocket também é configurado no arquivo `appsettings.json`:
 
 Este é o caminho que você deve usar ao se conectar ao WebSocket a partir do cliente.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Como usar
 
 Para usar o projeto, você precisa ter o .NET 6.0 instalado. Você pode então clonar o repositório e executar o projeto usando o comando `dotnet run` no diretório raiz do projeto.
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)</sup>
 
 ## Endpoints
 
@@ -434,4 +433,4 @@ Fecha uma conexão WebSocket com base no ID do socket fornecido.
 | 200 | OK | A conexão WebSocket foi fechada. |
 | 404 | Not Found | O ID do socket não foi encontrado. |
 
-^[Voltar para o inicio](#simpleblog)^
+<sup>[Voltar para o inicio](#simpleblog)<sup>
