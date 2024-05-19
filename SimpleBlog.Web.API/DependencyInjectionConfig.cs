@@ -20,7 +20,7 @@ namespace SimpleBlog.Web.API
             services.AddApplicationServices()
                     .AddPersistenceServices(configuration)
                     .AddAuthenticationServices(configuration)
-                    .AddOtherServices();
+                    .AddWebSocketServices();
 
         public static IServiceCollection AddApplicationServices(this IServiceCollection services) =>
             services.AddTransient<IUserService, UserService>()
@@ -56,8 +56,10 @@ namespace SimpleBlog.Web.API
             return services;
         }
 
-        public static IServiceCollection AddOtherServices(this IServiceCollection services) => 
+        public static IServiceCollection AddWebSocketServices(this IServiceCollection services) => 
             services.AddSingleton<INotificationService, NotificationService>()
-                    .AddSingleton<IWebSocketManagerService, WebSocketManagerService>();
+                    .AddSingleton<IWebSocketManagerService, WebSocketManagerService>()
+                    //.AddSingleton<IWebSocketHandler, WebSocketHandler>()
+                    .AddSingleton<IWebSocketHandlerFactory, WebSocketHandlerFactory>();
     }
 }
