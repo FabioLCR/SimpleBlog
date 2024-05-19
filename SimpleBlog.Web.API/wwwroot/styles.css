@@ -1,0 +1,20 @@
+﻿body {
+    font-family: Arial, sans-serif;
+}
+.notification {
+    border: 1px dashed #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.notification h2 {
+    margin: 0;
+    margin-bottom: 5px;
+    color: #333;
+}
+.notification p {
+    margin: 0;
+    margin-bottom: 5px;
+}
+.notification time {
+    color: #777;
+}

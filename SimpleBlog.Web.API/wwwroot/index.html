@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Simple Blog</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Simple Blog</h1>
+    <h2>Notificações</h2>
+    <div id="notifications"></div>
+
+    <script>
+        var loc = window.location, new_uri;
+        if (loc.protocol === "https:") {
+            new_uri = "wss:";
+        } else {
+            new_uri = "ws:";
+        }
+        new_uri += "//" + loc.host;
+        new_uri += "/ws"; // Ajuste na rota do websocket
+
+        var socket = new WebSocket(new_uri);
+
+        socket.onopen = function (e) {
+            console.log("Conexão estabelecida");
+        };
+
+        socket.onmessage = function (event) {
+            var notification = JSON.parse(event.data);
+            var div = document.createElement('div');
+            div.className = 'notification';
+            div.innerHTML = (notification.Username ? '<h2>' + notification.Username + '</h2>' : '') +
+                '<p><strong>' + notification.PostTitle + '</strong></p>' +
+                '<p>' + notification.PostContent + '</p>' +
+                '<time>' + new Date(notification.Timestamp).toLocaleString() + '</time>';
+            document.getElementById('notifications').appendChild(div);
+        };
+
+        socket.onerror = function (error) {
+            console.log(`Erro no WebSocket: ${error}`);
+        };
+
+        // Fechar a conexão WebSocket quando a página é fechada
+        window.addEventListener('beforeunload', function (event) {
+            socket.close();
+        });
+    </script>
+</body>
+</html>
